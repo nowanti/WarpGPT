@@ -1,0 +1,28 @@
+version: '3'
+
+# 设置容器默认日志驱动以及日志占用空间上限
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: 10m
+
+services:
+  warpgpt:
+    image: nowanti/warpgpt:latest
+    container_name: warpgpt
+    restart: unless-stopped
+    logging: *default-logging
+    command: "/app/warpgpt"
+    volumes:
+      - "./.env.config:/app/.env"
+      - "./harPool:/app/harPool"
+    ports:
+      - "5000:5000"
+    networks:
+      - traefik
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+networks:
+  traefik:
+    external: true
