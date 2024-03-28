@@ -10,8 +10,9 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 go build -o warpgpt
+RUN go build -o warpgpt
 
 FROM gcr.io/distroless/static-debian11
 COPY --from=build /app/warpgpt /app/warpgpt
-CMD ["/app/warpgpt"]
+WORKDIR /app
+CMD ["./warpgpt"]
